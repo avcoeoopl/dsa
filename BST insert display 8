@@ -1,0 +1,98 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+Node* insert(Node* root, int data) {
+    if (root == nullptr) {
+        root = new Node();
+        root->data = data;
+        root->left = root->right = nullptr;
+    } else if (data < root->data) {
+        root->left = insert(root->left, data);
+    } else {
+        root->right = insert(root->right, data);
+    }
+    return root;
+}
+
+Node* search(Node* root, int key) {
+    if (root == nullptr || root->data == key)
+        return root;
+    if (key < root->data)
+        return search(root->left, key);
+    return search(root->right, key);
+}
+
+int depth(Node* root) {
+    if (root == nullptr)
+        return 0;
+    int leftDepth = depth(root->left);
+    int rightDepth = depth(root->right);
+    return max(leftDepth, rightDepth) + 1;
+}
+
+void leafNodes(Node* root) {
+    if (root == nullptr)
+        return;
+    if (root->left == nullptr && root->right == nullptr) {
+        cout << root->data << " ";
+    }
+    leafNodes(root->left);
+    leafNodes(root->right);
+}
+
+int main() {
+    Node* root = nullptr;
+    int choice, value;
+    Node* found = nullptr;  // Declare outside of the switch
+
+    do {
+        cout << "\n1. Insert\n2. Search\n3. Display Depth\n4. Display Leaf Nodes\n5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to insert: ";
+                cin >> value;
+                root = insert(root, value);
+                break;
+            case 2:
+                cout << "Enter value to search: ";
+                cin >> value;
+                found = search(root, value);
+                if (found != nullptr) 
+                    cout << "Found: " << found->data << endl;
+                else 
+                    cout << "Not found!" << endl;
+                break;
+            case 3:
+                if (root == nullptr)
+                    cout << "Tree is empty.\n";
+                else
+                    cout << "Depth of tree: " << depth(root) << endl;
+                break;
+            case 4:
+                if (root == nullptr)
+                    cout << "Tree is empty.\n";
+                else {
+                    cout << "Leaf nodes: ";
+                    leafNodes(root);
+                    cout << endl;
+                }
+                break;
+            case 5:
+                break;
+            default:
+                cout << "Invalid choice!" << endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
