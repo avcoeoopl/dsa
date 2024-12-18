@@ -1,0 +1,89 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct Student {
+    int rollno;
+    string name;
+    float sgpa;
+};
+
+void displayStudents(Student students[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << "Roll No: " << students[i].rollno
+             << ", Name: " << students[i].name
+             << ", SGPA: " << students[i].sgpa << endl;
+    }
+}
+
+void sortByName(Student students[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (students[j].name > students[j + 1].name) {
+               {
+                    Student temp=students[j];
+                    students[j]=students[j+1];
+                    students[j+1]=temp;
+               }
+            }
+        }
+    }
+}
+
+void searchBySGPA(Student students[], int n, float sgpa) {
+    for (int i = 0; i < n; i++) {
+        if (students[i].sgpa == sgpa) {
+            cout << "Roll No: " << students[i].rollno
+                 << ", Name: " << students[i].name
+                 << ", SGPA: " << students[i].sgpa << endl;
+            return; 
+        }
+    }
+    cout << "No students found with SGPA " << sgpa << ".\n";
+}
+
+
+void binarySearchByName(Student students[], int n, string targetName) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid =  (right + left) / 2;
+        if (students[mid].name == targetName) {
+            cout << "Roll No: " << students[mid].rollno
+                 << ", Name: " << students[mid].name
+                 << ", SGPA: " << students[mid].sgpa << endl;
+            return;
+        } else if (students[mid].name < targetName) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    cout << "Student with name '" << targetName << "' not found.\n";
+}
+
+int main() {
+    int n;
+    cout << "Enter the total number of students: ";
+    cin >> n;
+    Student students[n];
+    for (int i = 0; i < n; i++) {
+        cout << "Enter Roll No, Name, and SGPA: ";
+        cin >> students[i].rollno >> students[i].name >> students[i].sgpa;
+    }
+    sortByName(students, n);
+    cout << "\nSorted by name :\n";
+    displayStudents(students, n);
+
+    float sgpaToSearch;
+    cout << "Enter SGPA to search: ";
+    cin >> sgpaToSearch;
+    searchBySGPA(students, n, sgpaToSearch);
+
+    string nameToSearch;
+    cout << "Enter Name to search: ";
+    cin >> nameToSearch;
+    binarySearchByName(students, n, nameToSearch);
+
+    return 0;
+}
